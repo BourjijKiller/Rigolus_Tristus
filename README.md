@@ -20,6 +20,10 @@ Lorsque le nombre de points d'humeur de la créature est strictement positif, el
 
 **[ATTENTION] Deux créatures ne peuvent pas porter le même nom.**
 
+### Les créatures équanimes
+
+Enfin, il existe dans chaque camp, un petit groupe d'irréductibles créatures qui restent des Rigolus ou des Tristus chroniques. Ces créatures irréductibles ont un nombre de points d'humeur constant. Il faut donc réécrire certaines méthodes de la classe _Creature_ dans la nouvelle classe _CreatureEquanime_, afin de ne pas modifier les points d'humeur.
+
 ----------------------------------------------------------
 
 ## NOTIONS UTILISÉES
@@ -46,7 +50,8 @@ Ce projet est développé avec l'outil de développement [IntelliJ IDEA](https:/
 Les codes sources sont situés dans le dossier **src/** avec :
 * Le package **main/** contenant les classes principale
 * Le package **test/** contenant les classes de test
-* Le package **exceptions/** contenant les exceptions Java utilisées dans les classes
+* Le package **exception/** contenant les exceptions Java utilisées dans les classes
+* Le package **TypeJeuMot/** contenant l'énumération pour le type de jeu de mot
 
 ----------------------------------------------------------
 
@@ -56,11 +61,6 @@ Les codes sources sont situés dans le dossier **src/** avec :
 |:---:|:---:|
 | _15/02/2018_ | Création du squelette du projet et des premières classes nécessaires. Les méthodes de tests sont déjà fournies, il faut donc écrire les classes et les énumérations nécessaires pour valider tous les tests définis dans les classes de test |
 | _05/03/2018_ | Ajout des classes de Test **TestCreature** et **TestCreatureAbstraite**.																								Refonte de la classe Creature, en cohérence avec les classes de Test, et suppression des classes Java Rigolus et Tristus, qui sont inutiles puisque l'on instancie que des objets de type **Creature**.																																										Ajout des **encyclopédie des Rigolus et Tristus** sous forme de classe, ainsi que de la classe **Planete** |
-| _18/03/2018_ | Suppression des classes associées aux différentes encyclopédies, on représente directement les encyclopédies par des ArrayLists. Avancement dans le code, en respectant les classes de tests. Création de la classe **CreatureEquanime**, héritant de la classe **Creature**, avec pour seul différence que les points d'humeurs sont constants pour les créatures équanime. Création d'une énumération afin de créer et récupérer le type de jeu de mot de la créature lorsqu'elle joue au jeu du _Pierre/Feuille/Ciseaux_. Création des différents packages :
-* **exception** pour les **Exceptions** qui doivent être levées lors d'erreurs.
-* **main** qui contient les classes des Créatures et de la Planete.
-* **test** qui contient les classes de Test JUnit.
-* **TypeJeuMot** qui contient **l'énumération** pour le type de jeu de mot.
-Construction du squelette pour la classe **Planete** |
+| _18/03/2018_ | Suppression des classes associées aux différentes encyclopédies, on représente directement les encyclopédies par des ArrayLists. Avancement dans le code, en respectant les classes de tests. Création de la classe **CreatureEquanime**, héritant de la classe **Creature**, avec pour seul différence que les points d'humeurs sont constants pour les créatures équanime. Création d'une énumération afin de créer et récupérer le type de jeu de mot de la créature lorsqu'elle joue au jeu du _Pierre/Feuille/Ciseaux_. Restrucuration du code avec l'ajout de packages. Construction du squelette pour la classe **Planete** |
 
-_Dernière modification le 05/03/2018, 09h36_
+_Dernière modification le 18/03/2018, 21h00_
