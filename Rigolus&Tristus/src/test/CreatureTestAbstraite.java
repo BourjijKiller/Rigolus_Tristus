@@ -392,21 +392,21 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     @Test
     public void testDernierJeuDeMot2() throws ExceptionJouteImpossible {
         Creature unRigolus, unTristus, unAutreTristus;
-        int indice = indiceAleatoireEntre( 0, Math.min(effectifInitialRigolus, effectifInitialTristus));
+        int indice = indiceAleatoireEntre( 0, r( unTristus);
+        assertSame( unRigolus.dernierJeuDeMot(), unTristus.dernierJeuDeMot());
+        assertSame((indice + 1) % 3, unRigolus.dernierJeuDeMot().ordinal());
+        assertSame((indice + 1) % 3, unTristus.dernierJeuDeMot().ordinal());
+        Math.min(effectifInitialRigolus, effectifInitialTristus));
         unRigolus = creatures[indiceEncyclopedieRigolus][indice];
         unTristus = creatures[indiceEncyclopedieTristus][indice];
         assertSame( unRigolus.dernierJeuDeMot(), unTristus.dernierJeuDeMot());
         assertSame(indice % 3, unRigolus.dernierJeuDeMot().ordinal());
-        unRigolus.affronter( unTristus);
-        assertSame( unRigolus.dernierJeuDeMot(), unTristus.dernierJeuDeMot());
-        assertSame((indice + 1) % 3, unRigolus.dernierJeuDeMot().ordinal());
-        assertSame((indice + 1) % 3, unTristus.dernierJeuDeMot().ordinal());
-        // Ordinal --> Nombre associé à l'enum qui récupère l'indice associé à pierre, feuille ciseaux
+        unRigolus.affronte// Ordinal --> Nombre associé à l'enum qui récupère l'indice associé à pierre, feuille ciseaux
         // Correspondant à getIndice, remplacer la fonction
 
         unAutreTristus = creatures[indiceEncyclopedieTristus][(indice + 2) % effectifInitialTristus];
         assertNotSame( unRigolus.dernierJeuDeMot(), unAutreTristus.dernierJeuDeMot());
-        unRigolus.affronter( unAutreTristus);
+        unRigolus.affronter(unAutreTristus);
         assertSame((indice + 2) % 3, unRigolus.dernierJeuDeMot().ordinal());
         assertEquals(indice % 3, unAutreTristus.dernierJeuDeMot().ordinal());
     }

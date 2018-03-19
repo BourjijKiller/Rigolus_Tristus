@@ -18,4 +18,19 @@ public class CreatureEquanime extends Creature
     {
         super(indiceEncyclopedie, b);
     }
+
+    /**
+     * Description textuelle d'une créature équanime
+     * @return chaine de caractères représentant la créature
+     */
+    @Override
+    public String toString()
+    {
+        String result;
+        if(this.estUnRigolus())
+            result = "<" + this.nom() + " :D H=" + this.humeur() + " C=" + this.stringDernierJeuDeMot() + ">";
+        else
+            result = "<" + this.nom() + " :[ H=" + this.humeur() + " C=" + this.stringDernierJeuDeMot() + ">";
+        return result;
+    }
 }

@@ -5,6 +5,7 @@ import exception.ExceptionChefDejaCreee;
 import exception.ExceptionChefNonCree;
 import exception.ExceptionCreatureDejaCreee;
 import exception.ExceptionJouteImpossible;
+import main.planete.Planete;
 
 import java.util.*;
 
@@ -61,10 +62,10 @@ public class Creature implements Comparable<Creature>
     private int [] tabJeuxTristus = new int [] {0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2};
 
     // Liste à 3 dimension des Rigolus déjà créé
-    private ArrayList<ArrayList<Object>> listRigolusCree = new ArrayList<ArrayList<Object>>();
+    private ArrayList<ArrayList<Object>> rangsDesRigolusCreees = new ArrayList<ArrayList<Object>>();
 
     // Liste à 3 dimension des Tristus déja créé
-    private ArrayList<ArrayList<Object>> listTristusCree = new ArrayList<ArrayList<Object>>();
+    private ArrayList<ArrayList<Object>> rangsDesTristusCreees = new ArrayList<ArrayList<Object>>();
 
     // Type de jeu de mots pour le jeu PIERRE-FEUILLE-PAPIER entre les créatures
     private TypeDeJeuDeMot pierre = TypeDeJeuDeMot.PIERRE;
@@ -76,6 +77,12 @@ public class Creature implements Comparable<Creature>
 
     // Variable stockant le nombre de défaites de la créature
     private int nbDefaite = 0;
+
+    // Table de hachage permettant de stocker la créature ainsi que le nombre de fois ou elle a été vaincue
+    HashMap<Creature, Integer> vaincus = new HashMap<Creature, Integer>();
+
+    // Ensemble contenant toute les créatures vaincues
+    HashSet<Creature> creatureVaincus = new HashSet<Creature>();
 
     /**
      * Indique l'encyclopédie à utiliser selon le paramètre b
@@ -101,9 +108,9 @@ public class Creature implements Comparable<Creature>
 
         // Structure de l'ArrayList à 3 dimensions
         for(int i = 0; i < 2; i++)
-            this.listRigolusCree.add(new ArrayList<Object>());
+            this.rangsDesRigolusCreees.add(new ArrayList<Object>());
         for(int j = 0; j < 2; j++)
-            this.listTristusCree.add(new ArrayList<Object>());
+            this.rangsDesTristusCreees.add(new ArrayList<Object>());
 
         // si b ==  true, on créé un Rigolus
         if(b) {
@@ -111,19 +118,19 @@ public class Creature implements Comparable<Creature>
             On ajoute ensuite le chef dans la liste des Rigolus créé pour bloquer la création d'un deuxième chef
              */
             if(indiceEncyclopedie == 0) {
-                if(this.listRigolusCree.get(0).isEmpty() && this.listRigolusCree.get(1).isEmpty() && this.listRigolusCree.get(2).isEmpty()) {
+                if(this.rangsDesRigolusCreees.get(0).isEmpty() && this.rangsDesRigolusCreees.get(1).isEmpty() && this.rangsDesRigolusCreees.get(2).isEmpty()) {
                     // Création du chef des Rigolus
                     nbInstanceRigolus++;
-                    this.listRigolusCree.get(0).add(this.listNomRigolus.get(indiceEncyclopedie));
-                    this.listRigolusCree.get(1).add(this.listPtsHumeursRigolus.get(indiceEncyclopedie));
-                    this.listRigolusCree.get(2).add(this.listDernierJeuxMotsRigolus.get(indiceEncyclopedie));
-                    this.listRigolusCree.get(3).add(this.getNbAffrontements());
-                    this.listRigolusCree.get(4).add(this.getNbDefaite());
-                    this.nom = (String)this.listRigolusCree.get(0).get(0);
-                    this.ptsHumeurs = (Integer)this.listRigolusCree.get(1).get(0);
-                    this.dernierJeuxMots = (Integer)this.listRigolusCree.get(2).get(0);
-                    this.nbAffrontements = (Integer)this.listRigolusCree.get(3).get(0);
-                    this.nbDefaite = (Integer)this.listRigolusCree.get(4).get(0);
+                    this.rangsDesRigolusCreees.get(0).add(this.listNomRigolus.get(indiceEncyclopedie));
+                    this.rangsDesRigolusCreees.get(1).add(this.listPtsHumeursRigolus.get(indiceEncyclopedie));
+                    this.rangsDesRigolusCreees.get(2).add(this.listDernierJeuxMotsRigolus.get(indiceEncyclopedie));
+                    this.rangsDesRigolusCreees.get(3).add(this.nombreDeJoutes());
+                    this.rangsDesRigolusCreees.get(4).add(this.getNbDefaite());
+                    this.nom = (String)this.rangsDesRigolusCreees.get(0).get(0);
+                    this.ptsHumeurs = (Integer)this.rangsDesRigolusCreees.get(1).get(0);
+                    this.dernierJeuxMots = (Integer)this.rangsDesRigolusCreees.get(2).get(0);
+                    this.nbAffrontements = (Integer)this.rangsDesRigolusCreees.get(3).get(0);
+                    this.nbDefaite = (Integer)this.rangsDesRigolusCreees.get(4).get(0);
                     this.chefRigolusCree = true;
                 }
                 else
@@ -139,25 +146,25 @@ public class Creature implements Comparable<Creature>
                 On vérifie si le chef a bien été créé avant de créer d'autres créatures
                  */
                 if(this.chefRigolusCree) {
-                    if(this.listRigolusCree.get(0).contains(this.listNomRigolus.get(indiceEncyclopedie))) {
-                        if(this.listRigolusCree.get(1).contains(this.listPtsHumeursRigolus.get(indiceEncyclopedie))) {
-                            if(this.listRigolusCree.get(2).contains(this.listDernierJeuxMotsRigolus.get(indiceEncyclopedie)))
+                    if(this.rangsDesRigolusCreees.get(0).contains(this.listNomRigolus.get(indiceEncyclopedie))) {
+                        if(this.rangsDesRigolusCreees.get(1).contains(this.listPtsHumeursRigolus.get(indiceEncyclopedie))) {
+                            if(this.rangsDesRigolusCreees.get(2).contains(this.listDernierJeuxMotsRigolus.get(indiceEncyclopedie)))
                                 throw new ExceptionCreatureDejaCreee();
                         }
                     }
                     else {
                         // Création d'un Rigolus
                         nbInstanceRigolus++;
-                        this.listRigolusCree.get(0).add(this.listNomRigolus.get(indiceEncyclopedie));
-                        this.listRigolusCree.get(1).add(this.listPtsHumeursRigolus.get(indiceEncyclopedie));
-                        this.listRigolusCree.get(2).add(this.listDernierJeuxMotsRigolus.get(indiceEncyclopedie));
-                        this.listRigolusCree.get(3).add(this.getNbAffrontements());
-                        this.listRigolusCree.get(4).add(this.getNbDefaite());
-                        this.nom = (String)this.listRigolusCree.get(0).get(nbInstanceRigolus);
-                        this.ptsHumeurs = (Integer)this.listRigolusCree.get(1).get(nbInstanceRigolus);
-                        this.dernierJeuxMots = (Integer)this.listRigolusCree.get(2).get(nbInstanceRigolus);
-                        this.nbAffrontements = (Integer)this.listRigolusCree.get(3).get(nbInstanceRigolus);
-                        this.nbDefaite = (Integer)this.listRigolusCree.get(4).get(nbInstanceRigolus);
+                        this.rangsDesRigolusCreees.get(0).add(this.listNomRigolus.get(indiceEncyclopedie));
+                        this.rangsDesRigolusCreees.get(1).add(this.listPtsHumeursRigolus.get(indiceEncyclopedie));
+                        this.rangsDesRigolusCreees.get(2).add(this.listDernierJeuxMotsRigolus.get(indiceEncyclopedie));
+                        this.rangsDesRigolusCreees.get(3).add(this.nombreDeJoutes());
+                        this.rangsDesRigolusCreees.get(4).add(this.getNbDefaite());
+                        this.nom = (String)this.rangsDesRigolusCreees.get(0).get(nbInstanceRigolus);
+                        this.ptsHumeurs = (Integer)this.rangsDesRigolusCreees.get(1).get(nbInstanceRigolus);
+                        this.dernierJeuxMots = (Integer)this.rangsDesRigolusCreees.get(2).get(nbInstanceRigolus);
+                        this.nbAffrontements = (Integer)this.rangsDesRigolusCreees.get(3).get(nbInstanceRigolus);
+                        this.nbDefaite = (Integer)this.rangsDesRigolusCreees.get(4).get(nbInstanceRigolus);
                     }
                 }
                 else
@@ -170,19 +177,19 @@ public class Creature implements Comparable<Creature>
             On ajoute ensuite le chef dans la liste des Tristus créée pour bloquer la création d'un deuxième chef
              */
             if(indiceEncyclopedie == 0) {
-                if(this.listTristusCree.get(0).isEmpty() && this.listTristusCree.get(1).isEmpty() && this.listTristusCree.get(2).isEmpty()) {
+                if(this.rangsDesTristusCreees.get(0).isEmpty() && this.rangsDesTristusCreees.get(1).isEmpty() && this.rangsDesTristusCreees.get(2).isEmpty()) {
                     // Création du chef des Tristus
                     nbInstanceTristus++;
-                    this.listTristusCree.get(0).add(this.listNomTristus.get(indiceEncyclopedie));
-                    this.listTristusCree.get(1).add(this.listPtsHumeursTristus.get(indiceEncyclopedie));
-                    this.listTristusCree.get(2).add(this.listDernierJeuxMotsTristus.get(indiceEncyclopedie));
-                    this.listTristusCree.get(3).add(this.getNbAffrontements());
-                    this.listTristusCree.get(4).add(this.getNbDefaite());
-                    this.nom = (String)this.listTristusCree.get(0).get(0);
-                    this.ptsHumeurs = (Integer)this.listTristusCree.get(1).get(0);
-                    this.dernierJeuxMots = (Integer)this.listTristusCree.get(2).get(0);
-                    this.nbAffrontements = (Integer)this.listTristusCree.get(3).get(0);
-                    this.nbDefaite = (Integer)this.listTristusCree.get(4).get(0);
+                    this.rangsDesTristusCreees.get(0).add(this.listNomTristus.get(indiceEncyclopedie));
+                    this.rangsDesTristusCreees.get(1).add(this.listPtsHumeursTristus.get(indiceEncyclopedie));
+                    this.rangsDesTristusCreees.get(2).add(this.listDernierJeuxMotsTristus.get(indiceEncyclopedie));
+                    this.rangsDesTristusCreees.get(3).add(this.nombreDeJoutes());
+                    this.rangsDesTristusCreees.get(4).add(this.getNbDefaite());
+                    this.nom = (String)this.rangsDesTristusCreees.get(0).get(0);
+                    this.ptsHumeurs = (Integer)this.rangsDesTristusCreees.get(1).get(0);
+                    this.dernierJeuxMots = (Integer)this.rangsDesTristusCreees.get(2).get(0);
+                    this.nbAffrontements = (Integer)this.rangsDesTristusCreees.get(3).get(0);
+                    this.nbDefaite = (Integer)this.rangsDesTristusCreees.get(4).get(0);
                     this.chefTristusCree = true;
                 }
                 else
@@ -197,25 +204,25 @@ public class Creature implements Comparable<Creature>
                 On vérifie que le chef a bien été créé avant de créer les autres créatures
                  */
                 if(this.chefTristusCree) {
-                    if(this.listTristusCree.get(0).contains(this.listNomTristus.get(indiceEncyclopedie))) {
-                        if(this.listTristusCree.get(1).contains(this.listPtsHumeursTristus.get(indiceEncyclopedie))) {
-                            if(this.listTristusCree.get(2).contains(this.listDernierJeuxMotsTristus.get(indiceEncyclopedie)))
+                    if(this.rangsDesTristusCreees.get(0).contains(this.listNomTristus.get(indiceEncyclopedie))) {
+                        if(this.rangsDesTristusCreees.get(1).contains(this.listPtsHumeursTristus.get(indiceEncyclopedie))) {
+                            if(this.rangsDesTristusCreees.get(2).contains(this.listDernierJeuxMotsTristus.get(indiceEncyclopedie)))
                                 throw new ExceptionCreatureDejaCreee();
                         }
                     }
                     else {
                         // Création d'un tristus
                         nbInstanceTristus++;
-                        this.listTristusCree.get(0).add(this.listNomTristus.get(indiceEncyclopedie));
-                        this.listTristusCree.get(1).add(this.listPtsHumeursTristus.get(indiceEncyclopedie));
-                        this.listTristusCree.get(2).add(this.listDernierJeuxMotsTristus.get(indiceEncyclopedie));
-                        this.listTristusCree.get(3).add(this.getNbAffrontements());
-                        this.listTristusCree.get(4).add(this.getNbDefaite());
-                        this.nom = (String)this.listTristusCree.get(0).get(nbInstanceTristus);
-                        this.ptsHumeurs = (Integer)this.listTristusCree.get(1).get(nbInstanceTristus);
-                        this.dernierJeuxMots = (Integer)this.listTristusCree.get(2).get(nbInstanceTristus);
-                        this.nbAffrontements = (Integer)this.listTristusCree.get(3).get(nbInstanceTristus);
-                        this.nbDefaite = (Integer)this.listTristusCree.get(4).get(nbInstanceTristus);
+                        this.rangsDesTristusCreees.get(0).add(this.listNomTristus.get(indiceEncyclopedie));
+                        this.rangsDesTristusCreees.get(1).add(this.listPtsHumeursTristus.get(indiceEncyclopedie));
+                        this.rangsDesTristusCreees.get(2).add(this.listDernierJeuxMotsTristus.get(indiceEncyclopedie));
+                        this.rangsDesTristusCreees.get(3).add(this.nombreDeJoutes());
+                        this.rangsDesTristusCreees.get(4).add(this.getNbDefaite());
+                        this.nom = (String)this.rangsDesTristusCreees.get(0).get(nbInstanceTristus);
+                        this.ptsHumeurs = (Integer)this.rangsDesTristusCreees.get(1).get(nbInstanceTristus);
+                        this.dernierJeuxMots = (Integer)this.rangsDesTristusCreees.get(2).get(nbInstanceTristus);
+                        this.nbAffrontements = (Integer)this.rangsDesTristusCreees.get(3).get(nbInstanceTristus);
+                        this.nbDefaite = (Integer)this.rangsDesTristusCreees.get(4).get(nbInstanceTristus);
                     }
                 }
                 else {
@@ -223,6 +230,43 @@ public class Creature implements Comparable<Creature>
                 }
             }
         }
+    }
+
+    /**
+     * Description textuelle d'une créature
+     * @return chaine de caractères représentant la créature
+     */
+    @Override
+    public String toString()
+    {
+        String result;
+        if(this.estUnRigolus())
+            result = "<" + this.nom() + " :) H=" + this.humeur() + " C=" + this.stringDernierJeuDeMot() + ">";
+        else
+            result = "<" + this.nom() + " :( H=" + this.humeur() + " C=" + this.stringDernierJeuDeMot() + ">";
+        return result;
+    }
+
+    /**
+     * Détermine le dernier jeu de mot pour la méthode toString(), en fonction de l'entier associé
+     * Encapsulation en protected afin d'utiliser la méthode dans la classe CreatureEquanime
+     * @return mot
+     */
+    protected String stringDernierJeuDeMot()
+    {
+        String mot = "";
+        switch (this.dernierJeuDeMot()) {
+            case 0:
+                mot = "PIERRE";
+                break;
+            case 1:
+                mot = "FEUILLE";
+                break;
+            case 2:
+                mot = "CISEAUX";
+                break;
+        }
+        return mot;
     }
 
     /**
@@ -274,7 +318,7 @@ public class Creature implements Comparable<Creature>
      * Récupère le nombre d'affrontements de la créature courante
      * @return nombre d'affrontements
      */
-    public int getNbAffrontements()
+    public int nombreDeJoutes()
     {
         return this.nbAffrontements;
     }
@@ -310,7 +354,7 @@ public class Creature implements Comparable<Creature>
                         Si le nombre de défaite est de 10, 20, 30 40, etc...
                         La pénalité est augmentée de 1
                          */
-                        if(creature.getNbAffrontements()%10 == 0) {
+                        if(creature.nombreDeJoutes()%10 == 0) {
                             // La créature gagnante (en paramètre) possède modulo 10 joutes, et la créature perdante (courante) possède plus de 3 défaites
                             if(this.plusDeTroisDefaites())
                                 this.ptsHumeurs = this.ptsHumeurs - 12;
@@ -327,7 +371,7 @@ public class Creature implements Comparable<Creature>
                     }
                     // Pour un Tristus, gains de points d'humeurs
                     else {
-                        if(creature.getNbAffrontements()%10 == 0) {
+                        if(creature.nombreDeJoutes()%10 == 0) {
                             if(this.plusDeTroisDefaites())
                                 this.ptsHumeurs = this.ptsHumeurs + 12;
                             else
@@ -341,6 +385,8 @@ public class Creature implements Comparable<Creature>
                         }
                     }
                     this.nbDefaite += 1;
+                    // Ajout de la créature perdante dans la table de hachage des perdants
+                    this.vaincus.put(this, this.getNbDefaite());
                     break;
                 // Egalité entre les deux créatures
                 case 0:
@@ -349,7 +395,7 @@ public class Creature implements Comparable<Creature>
                 case 1:
                     // Ppur un Rigolus, perte de points d'humeurs
                     if(this.estUnRigolus()) {
-                        if(this.getNbAffrontements()%10 == 0) {
+                        if(this.nombreDeJoutes()%10 == 0) {
                             // La créature gagnante (courante) possède un nombre de jouts modulo 10, et la créature perdante (en paramètre) a perdu plus de 3 fois
                             if(creature.plusDeTroisDefaites())
                                 creature.ptsHumeurs = creature.ptsHumeurs - 12;
@@ -366,7 +412,7 @@ public class Creature implements Comparable<Creature>
                     }
                     // Pour un Tristus, gains de points d'humeurs
                     else {
-                        if(this.getNbAffrontements()%10 == 0) {
+                        if(this.nombreDeJoutes()%10 == 0) {
                             if(creature.plusDeTroisDefaites())
                                 creature.ptsHumeurs = creature.ptsHumeurs + 12;
                             else
@@ -380,6 +426,8 @@ public class Creature implements Comparable<Creature>
                         }
                     }
                     creature.nbDefaite += 1;
+                    // Ajout de la créature perdante dans la table de hachage des perdants
+                    this.vaincus.put(creature, creature.getNbDefaite());
                     break;
             }
         }
@@ -387,18 +435,25 @@ public class Creature implements Comparable<Creature>
             throw new ExceptionJouteImpossible();
     }
 
+    /**
+     * Permet de connaître les créatures vaincues ainsi que son nombre de défaites
+     * @return table de hachage (Map) de la forme (vaincu, nombre de fois vaincu)
+     */
     public HashMap<Creature, Integer> tableauDeChasse()
     {
-        HashMap<Creature, Integer> vaincus = new HashMap<Creature, Integer>();
-        return vaincus;
+        return this.vaincus;
     }
 
+    /**
+     * Permet de connaître les vaincues de la méthode affronter()
+     * Pour éviter la redondance de code, on extrait juste les clés de la HashMap ci-dessus
+     * @return ensemble des créatures vaincues
+     */
     public HashSet<Creature> vaincus()
     {
-        HashSet<Creature> creatureVaincus = new HashSet<Creature>();
-        return creatureVaincus;
+        this.creatureVaincus.addAll(this.tableauDeChasse().keySet());
+        return this.creatureVaincus;
     }
-    // extraire toute les clés de la HashMap dans le HashSet
 
     /**
      * Permet de comparer le dernier jeux de mots entre la créature courante et la créature en paramètre et renvoie un statut gagnant ou perdant
@@ -454,5 +509,52 @@ public class Creature implements Comparable<Creature>
     private boolean plusDeTroisDefaites()
     {
         return this.getNbDefaite() > 3;
+    }
+
+    /**
+     * Permet de ne créer qu'une seule planète lors de l'exécution du programme
+     * @return la planète
+     */
+    public static Planete laPlanete()
+    {
+        if(Planete.laPlanete == null)
+            Planete.laPlanete = new Planete("Rigolus-Tristus");
+        return Planete.laPlanete;
+    }
+
+    /**
+     * Permet de connaitre le nombre de victoires de la créature courante
+     * @return nombre de victoire
+     */
+    public int nombreDeVictoires()
+    {
+        return this.nombreDeJoutes() - this.getNbDefaite();
+    }
+
+    /**
+     * Récupère le nombre de créature créées nécessaire à la classe Planete
+     * @return nombre de créature créées
+     */
+    public static int getNbHabitants()
+    {
+        return nbInstanceRigolus + nbInstanceTristus;
+    }
+
+    /**
+     * Récupère la liste des Rigolus créés
+     * @return liste des Rigolus
+     */
+    public ArrayList<ArrayList<Object>> getRangsDesRigolusCreees()
+    {
+        return this.rangsDesRigolusCreees;
+    }
+
+    /**
+     * Récupère la liste des Tristus créés
+     * @return liste des Tristus
+     */
+    public ArrayList<ArrayList<Object>> getRangsDesTristusCreees()
+    {
+        return this.rangsDesTristusCreees;
     }
 }

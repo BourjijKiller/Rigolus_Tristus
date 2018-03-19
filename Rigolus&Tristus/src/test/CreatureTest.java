@@ -30,7 +30,7 @@ public class CreatureTest extends CreatureTestAbstraite {
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#affronter()}.
+     * Methode de test de {@link creatures.Creature#affronter()}
      * Affrontements entre Deprimus et Chantatutetus, puis entre Hilarus et Chantatutetus.
      * @throws ExceptionJouteImpossible
      */

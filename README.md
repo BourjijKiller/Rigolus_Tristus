@@ -24,6 +24,12 @@ Lorsque le nombre de points d'humeur de la créature est strictement positif, el
 
 Enfin, il existe dans chaque camp, un petit groupe d'irréductibles créatures qui restent des Rigolus ou des Tristus chroniques. Ces créatures irréductibles ont un nombre de points d'humeur constant. Il faut donc réécrire certaines méthodes de la classe _Creature_ dans la nouvelle classe _CreatureEquanime_, afin de ne pas modifier les points d'humeur.
 
+### La planète Rigolus-Tristus
+
+La vie de la planète **Rigolus-Tristus** est rythmée par les affrontements entre **Rigolus** et **Tristus**. Les chefs, qui sont très soucieux du moral de leur troupe, ont mis au point différents outils permettant de parcourir toutes les créatures de chaque camp, de mesurer l'indice de bonheur brut de la planète, d'obtenir la liste des créatures triée dans l'ordre croissant de leur **humeur**, d'obtenir la liste des créatures les plus fortes (celles qui ont le plus de victoires) ou d'obtenir la liste des Rigolus non chroniques dont l'humeur   est inférieure à un certain seuil.
+
+**_[EXPLIQUER MÉTHODES AU PROCHAIN COMMIT]_**
+
 ----------------------------------------------------------
 
 ## NOTIONS UTILISÉES
@@ -62,5 +68,6 @@ Les codes sources sont situés dans le dossier **src/** avec :
 | _15/02/2018_ | Création du squelette du projet et des premières classes nécessaires. Les méthodes de tests sont déjà fournies, il faut donc écrire les classes et les énumérations nécessaires pour valider tous les tests définis dans les classes de test |
 | _05/03/2018_ | Ajout des classes de Test **TestCreature** et **TestCreatureAbstraite**.																								Refonte de la classe Creature, en cohérence avec les classes de Test, et suppression des classes Java Rigolus et Tristus, qui sont inutiles puisque l'on instancie que des objets de type **Creature**.																																										Ajout des **encyclopédie des Rigolus et Tristus** sous forme de classe, ainsi que de la classe **Planete** |
 | _18/03/2018_ | Suppression des classes associées aux différentes encyclopédies, on représente directement les encyclopédies par des ArrayLists. Avancement dans le code, en respectant les classes de tests. Création de la classe **CreatureEquanime**, héritant de la classe **Creature**, avec pour seul différence que les points d'humeurs sont constants pour les créatures équanime. Création d'une énumération afin de créer et récupérer le type de jeu de mot de la créature lorsqu'elle joue au jeu du _Pierre/Feuille/Ciseaux_. Restrucuration du code avec l'ajout de packages. Construction du squelette pour la classe **Planete** |
+| _19/03/2018_ | Avancement du code pour les classes **Creature**, **CreatureEquanime** et **Planete**. Finalisation de la classe **Creature** avec le codage des méthodes `tableauDeChasse`, _qui renvoie une table de hachage (Map) contenant les couples de la forme (vaincu, nombre de fois où le vaincu a été battu par la Creature courante)_, et `vaincus()` _qui renvoie un ensemble (Set) formé de toutes les Creature vaincues par la Creature courante_. Il reste donc à finir la classe Planete, et régler le problème de la méthode **ordinal()** et des itérateurs de chaque Encyclopédie, qui ne fonctionnent pas encore |
 
-_Dernière modification le 18/03/2018, 21h00_
+_Dernière modification le 19/03/2018, 18h03_

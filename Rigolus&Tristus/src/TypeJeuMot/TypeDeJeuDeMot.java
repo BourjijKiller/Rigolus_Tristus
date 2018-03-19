@@ -11,6 +11,10 @@ public enum TypeDeJeuDeMot
         this.indice = indice;
     }
 
+    /**
+     * Récupère l'indice associé à l'énumération
+     * @return numéro de l'énumération
+     */
     public int getIndice()
     {
         return this.indice;

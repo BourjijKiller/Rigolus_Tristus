@@ -25,14 +25,11 @@ class PlaneteTest extends AfterCommunTest
 
         /* La planete Rigolus-Tristus */
         planete = Creature.laPlanete();
-        // Méthode static, si la variable static vaut null, on créé la planete, sinon on renvoie la variable
-        // variable static planete dans Planete qui vaut null au debut
-        // Obligé de mettre en public
         try {
             planete.indiceDeBonheurBrut();
             throw new AssertionError();
         }
-        catch ( PlaneteDeserteException e) { }
+        catch (PlaneteDeserteException e) { }
         assertEquals( "Rigolus-Tristus population=0", planete.toString());
 
         /* Creation des habitants de la planete Lepiedecheze */
