@@ -1,4 +1,4 @@
-# JEU RIGOLUS & TRISTUS
+# MONDE DES RIGOLUS & TRISTUS
 
 ----------------------------------------------------------
 
@@ -76,4 +76,4 @@ Les codes sources sont situés dans le dossier **src/** avec :
 | _19/03/2018_ | Avancement du code pour les classes **Creature**, **CreatureEquanime** et **Planete**. Finalisation de la classe **Creature** avec le codage des méthodes `tableauDeChasse`, _qui renvoie une table de hachage (Map) contenant les couples de la forme (vaincu, nombre de fois où le vaincu a été battu par la Creature courante)_, et `vaincus()` _qui renvoie un ensemble (Set) formé de toutes les Creature vaincues par la Creature courante_. Il reste donc à finir la classe Planete, et régler le problème de la méthode **ordinal()** et des itérateurs de chaque Encyclopédie, qui ne fonctionnent pas encore |
 | _20/03/2018_ | Finalisation des classes **CreatureEquanime** et **Planete** du projet afin de passer les tests. Correction de l'énumération **TypeDeJeuDeMot** pour passer les tests **JUnit**. Il manque la programmation d'un **Doclet**, permettant de générer la JavaDoc du projet de façon personnalisée et la méthode `public Set<Creature> vaincusTelsQue(Filtre<Creature> toujoursVrai)` dans la classe **Creature** permettant de renvoyer les créatures vaincus qui respecte le **Filtre** passé en paramètre |
 
-_Dernière modification le 20/03/2018, 23h12_
+_Dernière modification le 20/03/2018, 23h15_
