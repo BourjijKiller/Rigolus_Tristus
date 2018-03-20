@@ -1,23 +1,31 @@
 package test;
 
-import TypeJeuMot.TypeDeJeuDeMot;
-import exception.*;
-import main.creatures.Creature;
-import org.junit.Before;
-import org.junit.Test;
-import outils.Filtre;
+import static org.junit.Assert.*;
 
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import static TypeJeuMot.TypeDeJeuDeMot.*;
-import static junit.framework.TestCase.assertNotSame;
-import static junit.framework.TestCase.assertSame;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import TypeJeuMot.TypeDeJeuDeMot;
+import org.junit.Before;
+import org.junit.Test;
 
+import main.creatures.*;
+import outils.*;
+import exception.*;
+
+/**
+ * Classe abstraite qui definit le code commun des classes de test
+ * CreatureTest et CreatureEquanimeTest.
+ * NB : Deux bonnes pratiques d'ecriture des tests :
+ * 1 - Ne pas initialiser les variables de la classe de test dans un
+ * constructeur de la classe de test : il faut utiliser plutot la methode
+ * annotee par @Before
+ * 2 - Ne pas definir de variables statiques dans une classe de test de
+ * facon a garantir que tous les tests restent independants.
+ * @author Lucile Torres
+ *
+ */
 public abstract class CreatureTestAbstraite extends AfterCommunTest {
 
 	/* ************************************************************
@@ -158,9 +166,9 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
 
 		/* La premiere creature creee est necessairement un chef (de rang 0) */
         try { creerCreature(3, true); throw new AssertionError(); }
-        catch ( ExceptionChefNonCree e) { }
+        catch ( ExceptionChefNonCree | ExceptionChefDejaCreee e) { }
         try { creerCreature(1, false); throw new AssertionError(); }
-        catch ( ExceptionChefNonCree e) { }
+        catch ( ExceptionChefNonCree | ExceptionChefDejaCreee e) { }
 
 		/* Creation de la matrice creatures formee de deux lignes :
 		 * - la 1ere ligne creatures[indiceEncyclopedieTristus] contient les Tristus initialement crees
@@ -242,11 +250,11 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
             case PIERRE : 	if (c2.dernierJeuDeMot() == TypeDeJeuDeMot.FEUILLE) return -1;
             else if (c2.dernierJeuDeMot() == TypeDeJeuDeMot.CISEAUX) return 1;
             else return 0;
-            case FEUILLE : 	if (c2.dernierJeuDeMot() == PIERRE) return 1;
+            case FEUILLE : 	if (c2.dernierJeuDeMot() == TypeDeJeuDeMot.PIERRE) return 1;
             else if (c2.dernierJeuDeMot() == TypeDeJeuDeMot.CISEAUX) return -1;
             else return 0;
             case CISEAUX : 	if (c2.dernierJeuDeMot() == TypeDeJeuDeMot.FEUILLE) return 1;
-            else if (c2.dernierJeuDeMot() == PIERRE) return -1;
+            else if (c2.dernierJeuDeMot() == TypeDeJeuDeMot.PIERRE) return -1;
             else return 0;
             default : throw new AssertionError();
         }
@@ -325,7 +333,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
 	 * ************************************************************/
 
     /**
-     * Methode de test de {@link creatures.Creature#Creature()}.
+     * Methode de test de {@link Creature#Creature(int, boolean)}.
      * Il ne peut pas y avoir plusieurs creatures de meme nom que le chef Jubilus.
      * @throws ExceptionChefNonCree
      * @throws ExceptionCreatureDejaCreee
@@ -336,7 +344,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#Creature()}.
+     * Methode de test de {@link Creature#Creature(int, boolean)}.
      * Il ne peut pas y avoir plusieurs creatures de meme nom que le chef Taciturnus.
      * @throws ExceptionChefNonCree
      * @throws ExceptionCreatureDejaCreee
@@ -347,7 +355,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#nom()}.
+     * Methode de test de {@link Creature#nom()}.
      * Le nom d'une Creature est defini dans l'encyclopedie.
      */
     @Test
@@ -360,7 +368,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
 
 
     /**
-     * Methode de test de {@link creatures.Creature#humeur()}.
+     * Methode de test de {@link Creature#humeur()}.
      * A la creation, l'humeur d'une Creature est definie dans l'encyclopedie.
      */
     @Test
@@ -372,7 +380,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#dernierJeuDeMot()}.
+     * Methode de test de {@link Creature#dernierJeuDeMot()} )}.
      * A la creation, le type du dernier jeu de mot utilise par une Creature est defini dans l'encyclopedie.
      */
     @Test
@@ -384,7 +392,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#dernierJeuDeMot()}.
+     * Methode de test de {@link Creature#dernierJeuDeMot()}.
      * A chaque affrontement entre deux creatures avec des types de jeux de mots differents,
      * le type du dernier jeu de mot utilise par les Creatures change.
      * @throws ExceptionJouteImpossible
@@ -392,27 +400,25 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     @Test
     public void testDernierJeuDeMot2() throws ExceptionJouteImpossible {
         Creature unRigolus, unTristus, unAutreTristus;
-        int indice = indiceAleatoireEntre( 0, r( unTristus);
-        assertSame( unRigolus.dernierJeuDeMot(), unTristus.dernierJeuDeMot());
-        assertSame((indice + 1) % 3, unRigolus.dernierJeuDeMot().ordinal());
-        assertSame((indice + 1) % 3, unTristus.dernierJeuDeMot().ordinal());
-        Math.min(effectifInitialRigolus, effectifInitialTristus));
+        int indice = indiceAleatoireEntre( 0, Math.min(effectifInitialRigolus, effectifInitialTristus));
         unRigolus = creatures[indiceEncyclopedieRigolus][indice];
         unTristus = creatures[indiceEncyclopedieTristus][indice];
         assertSame( unRigolus.dernierJeuDeMot(), unTristus.dernierJeuDeMot());
         assertSame(indice % 3, unRigolus.dernierJeuDeMot().ordinal());
-        unRigolus.affronte// Ordinal --> Nombre associé à l'enum qui récupère l'indice associé à pierre, feuille ciseaux
-        // Correspondant à getIndice, remplacer la fonction
+        unRigolus.affronter( unTristus);
+        assertSame( unRigolus.dernierJeuDeMot(), unTristus.dernierJeuDeMot());
+        assertSame((indice + 1) % 3, unRigolus.dernierJeuDeMot().ordinal());
+        assertSame((indice + 1) % 3, unTristus.dernierJeuDeMot().ordinal());
 
         unAutreTristus = creatures[indiceEncyclopedieTristus][(indice + 2) % effectifInitialTristus];
         assertNotSame( unRigolus.dernierJeuDeMot(), unAutreTristus.dernierJeuDeMot());
-        unRigolus.affronter(unAutreTristus);
+        unRigolus.affronter( unAutreTristus);
         assertSame((indice + 2) % 3, unRigolus.dernierJeuDeMot().ordinal());
         assertEquals(indice % 3, unAutreTristus.dernierJeuDeMot().ordinal());
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#estUnRigolus()}.
+     * Methode de test de {@link Creature#estUnRigolus()}.
      * A la creation, les creatures de l'encyclopedie des Rigolus sont toutes des Rigolus, et
      * celles de l'encyclopedie des Tristus n'en sont pas.
      */
@@ -425,7 +431,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#estUnTristus()}.
+     * Methode de test de {@link Creature#estUnTristus()}.
      * A la creation, les creatures de l'encyclopedie des Rigolus ne sont pas des Tristus,
      * celles de l'encyclopedie des Tristus oui.
      */
@@ -438,7 +444,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#toString()}.
+     * Methode de test de {@link Creature#toString()}.
      * La description textuelle d'une Creature est de la forme :
      * <Chantatutetus :) H=75 C=FEUILLE> pour une Creature Rigolus ou
      * <Melancolicus :( H=80 C=PIERRE> pour une Creature Tristus ou
@@ -461,7 +467,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#nombreDeJoutes()}.
+     * Methode de test de {@link Creature#nombreDeJoutes()}.
      * A sa creation, une Creature comptabilise zero joutes.
      */
     @Test
@@ -473,7 +479,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#nombreDeJoutes()}.
+     * Methode de test de {@link Creature#nombreDeJoutes()}.
      * Apres l'affrontement contre 7 Rigolus, un Tristus compte 7 joutes.
      * @throws ExceptionJouteImpossible
      */
@@ -484,7 +490,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#nombreDeJoutes()}.
+     * Methode de test de {@link Creature#nombreDeJoutes()}.
      * Apres l'affrontement contre tous les (18) Rigolus, un Tristus compte 18 joutes
      * et chaque Rigolus 1 joute.
      * @throws ExceptionJouteImpossible
@@ -499,7 +505,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
 
 
     /**
-     * Methode de test de {@link creatures.Creature#tableauDeChasse()}.
+     * Methode de test de {@link Creature#tableauDeChasse()}.
      * A sa creation, une creature a un tableau de chasse vide.
      */
     @Test
@@ -521,7 +527,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     }
 
     /**
-     * Methode de test de {@link pokemons.Creature#vaincus()}.
+     * Methode de test de {@link Creature#vaincus()}.
      * A sa creation, une creature n'a vaincu aucune autre creature.
      */
     @Test
@@ -544,7 +550,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
 
 
     /**
-     * Methode de test de {@link creatures.Creature#vaincusTelsQue()}.
+     * Methode de test de {@link Creature#vaincusTelsQue(Filtre)}.
      * * A sa creation, une creature n'a vaincu aucune autre creature.
      */
     @Test
@@ -566,7 +572,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#vaincusTelsQue()}.
+     * Methode de test de {@link Creature#vaincusTelsQue(Filtre)}.
      * @throws ExceptionJouteImpossible
      */
     @Test
@@ -586,29 +592,31 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#affronter()}.
+     * Methode de test de {@link Creature#affronter(Creature)}.
      * Une Creature Tristus ne peut pas s'affronter elle-même.
      * @throws ExceptionJouteImpossible
      */
     @Test(expected=ExceptionJouteImpossible.class)
     public void testAffronter1() throws ExceptionJouteImpossible {
         int indice = indiceAleatoireEntre( 0, effectifInitialTristus);
-        creatures[indiceEncyclopedieTristus][indice].affronter(creatures[indiceEncyclopedieTristus][indice]);
+        creatures[indiceEncyclopedieTristus][indice].affronter(
+                creatures[indiceEncyclopedieTristus][indice] );
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#affronter()}.
+     * Methode de test de {@link Creature#affronter(Creature)}.
      * Une Creature Rigolus ne peut pas s'affronter elle-même.
      * @throws ExceptionJouteImpossible
      */
     @Test(expected=ExceptionJouteImpossible.class)
     public void testAffronter2() throws ExceptionJouteImpossible {
         int indice = indiceAleatoireEntre( 0, effectifInitialRigolus);
-        creatures[indiceEncyclopedieRigolus][indice].affronter(creatures[indiceEncyclopedieRigolus][indice]);
+        creatures[indiceEncyclopedieRigolus][indice].affronter(
+                creatures[indiceEncyclopedieRigolus][indice] );
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#affronter()}.
+     * Methode de test de {@link Creature#affronter(Creature)}.
      * L'affrontement entre deux creatures du meme camp (Rigolus ou Tristus)
      * ne fait rien.
      * @throws ExceptionJouteImpossible
@@ -662,7 +670,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
 
 
     /**
-     * Methode de test de {@link creatures.Creature#affronter()}.
+     * Methode de test de {@link Creature#affronter(Creature)}.
      * Affrontements entre un Rigolus et un Tristus utilisant des types de jeux de mot differents.
      * @throws ExceptionJouteImpossible
      */
@@ -680,7 +688,7 @@ public abstract class CreatureTestAbstraite extends AfterCommunTest {
     }
 
     /**
-     * Methode de test de {@link creatures.Creature#affronter()}.
+     * Methode de test de {@link Creature#affronter(Creature)}.
      * Affrontements entre Morfondus et Fourirus, puis entre Morfondus et Joyus.
      * @throws ExceptionJouteImpossible
      */

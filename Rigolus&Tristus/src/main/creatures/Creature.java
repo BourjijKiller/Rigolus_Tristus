@@ -6,6 +6,7 @@ import exception.ExceptionChefNonCree;
 import exception.ExceptionCreatureDejaCreee;
 import exception.ExceptionJouteImpossible;
 import main.planete.Planete;
+import outils.Filtre;
 
 import java.util.*;
 
@@ -17,7 +18,7 @@ public class Creature implements Comparable<Creature>
     // Caractéristique d'une créature
     private String nom;
     private int ptsHumeurs;
-    private int dernierJeuxMots;
+    private TypeDeJeuDeMot dernierJeuxMots;
 
     // Récupération du nombre d'instance créé qui servira dans les Encyclopédies des Tristus et des Rigolus
     private static int nbInstanceRigolus = 0;
@@ -128,7 +129,7 @@ public class Creature implements Comparable<Creature>
                     this.rangsDesRigolusCreees.get(4).add(this.getNbDefaite());
                     this.nom = (String)this.rangsDesRigolusCreees.get(0).get(0);
                     this.ptsHumeurs = (Integer)this.rangsDesRigolusCreees.get(1).get(0);
-                    this.dernierJeuxMots = (Integer)this.rangsDesRigolusCreees.get(2).get(0);
+                    this.dernierJeuxMots = (TypeDeJeuDeMot) this.rangsDesRigolusCreees.get(2).get(0);
                     this.nbAffrontements = (Integer)this.rangsDesRigolusCreees.get(3).get(0);
                     this.nbDefaite = (Integer)this.rangsDesRigolusCreees.get(4).get(0);
                     this.chefRigolusCree = true;
@@ -162,7 +163,7 @@ public class Creature implements Comparable<Creature>
                         this.rangsDesRigolusCreees.get(4).add(this.getNbDefaite());
                         this.nom = (String)this.rangsDesRigolusCreees.get(0).get(nbInstanceRigolus);
                         this.ptsHumeurs = (Integer)this.rangsDesRigolusCreees.get(1).get(nbInstanceRigolus);
-                        this.dernierJeuxMots = (Integer)this.rangsDesRigolusCreees.get(2).get(nbInstanceRigolus);
+                        this.dernierJeuxMots = (TypeDeJeuDeMot) this.rangsDesRigolusCreees.get(2).get(nbInstanceRigolus);
                         this.nbAffrontements = (Integer)this.rangsDesRigolusCreees.get(3).get(nbInstanceRigolus);
                         this.nbDefaite = (Integer)this.rangsDesRigolusCreees.get(4).get(nbInstanceRigolus);
                     }
@@ -187,7 +188,7 @@ public class Creature implements Comparable<Creature>
                     this.rangsDesTristusCreees.get(4).add(this.getNbDefaite());
                     this.nom = (String)this.rangsDesTristusCreees.get(0).get(0);
                     this.ptsHumeurs = (Integer)this.rangsDesTristusCreees.get(1).get(0);
-                    this.dernierJeuxMots = (Integer)this.rangsDesTristusCreees.get(2).get(0);
+                    this.dernierJeuxMots = (TypeDeJeuDeMot) this.rangsDesTristusCreees.get(2).get(0);
                     this.nbAffrontements = (Integer)this.rangsDesTristusCreees.get(3).get(0);
                     this.nbDefaite = (Integer)this.rangsDesTristusCreees.get(4).get(0);
                     this.chefTristusCree = true;
@@ -220,7 +221,7 @@ public class Creature implements Comparable<Creature>
                         this.rangsDesTristusCreees.get(4).add(this.getNbDefaite());
                         this.nom = (String)this.rangsDesTristusCreees.get(0).get(nbInstanceTristus);
                         this.ptsHumeurs = (Integer)this.rangsDesTristusCreees.get(1).get(nbInstanceTristus);
-                        this.dernierJeuxMots = (Integer)this.rangsDesTristusCreees.get(2).get(nbInstanceTristus);
+                        this.dernierJeuxMots = (TypeDeJeuDeMot) this.rangsDesTristusCreees.get(2).get(nbInstanceTristus);
                         this.nbAffrontements = (Integer)this.rangsDesTristusCreees.get(3).get(nbInstanceTristus);
                         this.nbDefaite = (Integer)this.rangsDesTristusCreees.get(4).get(nbInstanceTristus);
                     }
@@ -255,7 +256,7 @@ public class Creature implements Comparable<Creature>
     protected String stringDernierJeuDeMot()
     {
         String mot = "";
-        switch (this.dernierJeuDeMot()) {
+        switch (this.dernierJeuDeMot().getIndice()) {
             case 0:
                 mot = "PIERRE";
                 break;
@@ -309,7 +310,7 @@ public class Creature implements Comparable<Creature>
      * Récupère le dernier jeux de mots de la créature courante
      * @return jeux de mots sous forme d'un entier
      */
-    public int dernierJeuDeMot()
+    public TypeDeJeuDeMot dernierJeuDeMot()
     {
         return this.dernierJeuxMots;
     }
@@ -445,7 +446,7 @@ public class Creature implements Comparable<Creature>
     }
 
     /**
-     * Permet de connaître les vaincues de la méthode affronter()
+     * Permet de connaître les vaincues de la méthode {@link Creature#affronter(Creature)}
      * Pour éviter la redondance de code, on extrait juste les clés de la HashMap ci-dessus
      * @return ensemble des créatures vaincues
      */
@@ -458,7 +459,7 @@ public class Creature implements Comparable<Creature>
     /**
      * Permet de comparer le dernier jeux de mots entre la créature courante et la créature en paramètre et renvoie un statut gagnant ou perdant
      * gagnant = 1 / perdant = -1
-     * Méthode utilisé dans affronter() pour déterminer le gagnant et le perdant
+     * Méthode utilisé dans {@link Creature#affronter(Creature)} pour déterminer le gagnant et le perdant
      * @param creature
      * @return statut de la créature courante
      */
@@ -466,16 +467,16 @@ public class Creature implements Comparable<Creature>
     public int compareTo(Creature creature) {
         switch (this.dernierJeuDeMot()) {
             // PIERRE
-            case 0:
-                return statutPoints(creature, creature.dernierJeuDeMot() == feuille.getIndice(), -1, 1);
+            case PIERRE:
+                return statutPoints(creature, creature.dernierJeuDeMot().getIndice() == feuille.getIndice(), -1, 1);
             // FEUILLE
-            case 1:
-                return statutPoints(creature, creature.dernierJeuDeMot() == pierre.getIndice(), 1, -1);
+            case FEUILLE:
+                return statutPoints(creature, creature.dernierJeuDeMot().getIndice() == pierre.getIndice(), 1, -1);
             // CISEAUX
-            case 2:
-                if(creature.dernierJeuDeMot() == pierre.getIndice())
+            case CISEAUX:
+                if(creature.dernierJeuDeMot().getIndice() == pierre.getIndice())
                     return -1;
-                else if(creature.dernierJeuDeMot() == feuille.getIndice())
+                else if(creature.dernierJeuDeMot().getIndice() == feuille.getIndice())
                     return 1;
                 else
                     return 0;
@@ -485,7 +486,7 @@ public class Creature implements Comparable<Creature>
 
     /**
      * Evite la redondance de code afin de déterminer la victoire ou la défaite au jeu de la créature courante
-     * Méthode utilisé dans compareTo(Creature creature)
+     * Méthode utilisé dans {@link Creature#compareTo(Creature)}
      * @param creature
      * @param b
      * @param indice entier
@@ -496,7 +497,7 @@ public class Creature implements Comparable<Creature>
     {
         if(b)
             return indice;
-        else if(creature.dernierJeuDeMot() == ciseaux.getIndice())
+        else if(creature.dernierJeuDeMot().getIndice() == ciseaux.getIndice())
             return indice2;
         else
             return 0;
@@ -544,17 +545,28 @@ public class Creature implements Comparable<Creature>
      * Récupère la liste des Rigolus créés
      * @return liste des Rigolus
      */
-    public ArrayList<ArrayList<Object>> getRangsDesRigolusCreees()
+    public ArrayList<Creature> getRangsDesRigolusCreees()
     {
-        return this.rangsDesRigolusCreees;
+        ArrayList<Creature> rigolus = new ArrayList<Creature>();
+        for(Object o : this.rangsDesRigolusCreees)
+            rigolus.add((Creature) o);
+        return rigolus;
     }
 
     /**
      * Récupère la liste des Tristus créés
      * @return liste des Tristus
      */
-    public ArrayList<ArrayList<Object>> getRangsDesTristusCreees()
+    public ArrayList<Creature> getRangsDesTristusCreees()
     {
-        return this.rangsDesTristusCreees;
+        ArrayList<Creature> tristus = new ArrayList<Creature>();
+        for(Object o : this.rangsDesTristusCreees)
+            tristus.add((Creature)o);
+        return tristus;
+    }
+
+    public Set<Creature> vaincusTelsQue(Filtre<Creature> toujoursVrai)
+    {
+        return null;
     }
 }

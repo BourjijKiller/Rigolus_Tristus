@@ -6,6 +6,10 @@ public enum TypeDeJeuDeMot
 
     private int indice;
 
+    /**
+     * Constructeur de l'énumération
+     * @param indice
+     */
     TypeDeJeuDeMot(int indice)
     {
         this.indice = indice;
