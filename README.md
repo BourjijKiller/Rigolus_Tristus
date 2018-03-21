@@ -63,6 +63,7 @@ Les codes sources sont situés dans le dossier **src/** avec :
 * Le package **exception/** contenant les exceptions Java utilisées dans les classes
 * Le package **TypeJeuMot/** contenant l'énumération pour le type de jeu de mot
 * Le package **outils/** contenant le filtre utilisé dans la classe **Creature**
+* Le package **JavaDoc/** contenant la JavaDoc du projet
 
 ----------------------------------------------------------
 
@@ -75,5 +76,8 @@ Les codes sources sont situés dans le dossier **src/** avec :
 | _18/03/2018_ | Suppression des classes associées aux différentes encyclopédies, on représente directement les encyclopédies par des ArrayLists. Avancement dans le code, en respectant les classes de tests. Création de la classe **CreatureEquanime**, héritant de la classe **Creature**, avec pour seul différence que les points d'humeurs sont constants pour les créatures équanime. Création d'une énumération afin de créer et récupérer le type de jeu de mot de la créature lorsqu'elle joue au jeu du _Pierre/Feuille/Ciseaux_. Restrucuration du code avec l'ajout de packages. Construction du squelette pour la classe **Planete** |
 | _19/03/2018_ | Avancement du code pour les classes **Creature**, **CreatureEquanime** et **Planete**. Finalisation de la classe **Creature** avec le codage des méthodes `tableauDeChasse`, _qui renvoie une table de hachage (Map) contenant les couples de la forme (vaincu, nombre de fois où le vaincu a été battu par la Creature courante)_, et `vaincus()` _qui renvoie un ensemble (Set) formé de toutes les Creature vaincues par la Creature courante_. Il reste donc à finir la classe Planete, et régler le problème de la méthode **ordinal()** et des itérateurs de chaque Encyclopédie, qui ne fonctionnent pas encore |
 | _20/03/2018_ | Finalisation des classes **CreatureEquanime** et **Planete** du projet afin de passer les tests. Correction de l'énumération **TypeDeJeuDeMot** pour passer les tests **JUnit**. Il manque la programmation d'un **Doclet**, permettant de générer la JavaDoc du projet de façon personnalisée et la méthode `public Set<Creature> vaincusTelsQue(Filtre<Creature> toujoursVrai)` dans la classe **Creature** permettant de renvoyer les créatures vaincus qui respecte le **Filtre** passé en paramètre |
+| _21/03/2018_ | Finalisation des classes. Complétion et génération de la JavaDoc dans le package JavaDoc |
 
-_Dernière modification le 20/03/2018, 23h15_
+##### [PROJET TERMINÉ]
+
+_Dernière modification le 21/03/2018, 23h40_
